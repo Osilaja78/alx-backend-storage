@@ -4,27 +4,27 @@
 import requests
 import redis
 from functools import wraps
+from typing import Callable
 
 
 r = redis.Redis()
 
 
-def url_cache_count(func):
+def url_cache_count(method: Callable) -> Callable:
     """
     Decorator for caching and tracking URL access counts
     """
 
-    @wraps(func)
+    @wraps(method)
     def wrapper(url):
         """Wrapper function to increment and set expiry"""
 
-        data = r.get("cached:" + url)
+        print(r.incr(f"count:{url}"))
+        data = r.get(f"cached:{url}")
         if data:
             return data.decode("utf-8")
 
-        content = func(url)
-
-        r.incr(f"count:{url}")
+        content = method(url)
         r.setex(f"cached:{url}", 10, content)
 
         return content
