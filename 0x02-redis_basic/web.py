@@ -16,16 +16,16 @@ def url_cache_count(func):
 
     @wraps(func)
     def wrapper(url):
+        """Wrapper function to increment and set expiry"""
+
         data = r.get("cached:" + url)
         if data:
             return data.decode("utf-8")
 
         content = func(url)
-        count_key = "content:" + url
 
-        r.incr(count_key)
-        r.set("cached:" + url, content)
-        r.expire("cached:" + url, 10)
+        r.incr(f"count:{url}")
+        r.setex(f"cached:{url}", 10, content)
 
         return content
     return wrapper
