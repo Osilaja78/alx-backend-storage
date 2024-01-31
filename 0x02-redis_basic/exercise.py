@@ -68,7 +68,7 @@ def replay(func: Callable) -> None:
     except Exception:
         calls = 0
 
-    print(f"{func_name} was called {calls} times")
+    print(f"{func_name} was called {calls} times:")
     inputs = r.lrange(f"{func_name}:inputs", 0, -1)
     outputs = r.lrange(f"{func_name}:outputs", 0, -1)
 
