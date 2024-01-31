@@ -13,7 +13,7 @@ class Cache:
         """Init dunder method"""
         self._redis = redis.Redis(host='localhost', port=6379, db=0)
         self._redis.flushdb()
-    
+
     def store(self, data: Union[str, int, bytes, float]) -> str:
         """
         Store method that stores the input data in Redis.
